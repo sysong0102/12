@@ -85,17 +85,17 @@ int board_getBoardCoin(int pos) //
 
 //int board_getSharkPosition(void);
 
-int board_stepShark(void)
+int board_stepShark(void) //상어 이동 함수 
 {
 	int step = rand()%(MAX_SHARKSTEP + 1); // 1 ~ MAX_SHARKSTEP 칸을 랜덤으로 이동
 	int i;
 	for(i=board_sharkPosition;i<=board_sharkPosition+step;i++)
 	{
-		if(i >= 0 && i < N_BOARD)
-			board_status[i] = BOARDSTATUS_NOK;
+		if(i >= 0 && i < N_BOARD) 
+			board_status[i] = BOARDSTATUS_NOK; //board_status 배열 요소 변경 
 	}
 	
-	board_sharkPosition += step;
+	board_sharkPosition += step; //shark_position 값 갱신 
 	
 	return board_sharkPosition;
 }

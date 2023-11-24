@@ -33,13 +33,13 @@ void opening(void)
 
 
 
-int rolldie(void)
+int rolldie(void) //주사위 굴리기 함수 
 {
 	return rand()%MAX_DIE+1;
 } 
 
 
-void printPlayerPosition(int player)
+void printPlayerPosition(int player) //플레이어 위치 출력 함수 
 {
 	int i;
 	
@@ -59,7 +59,7 @@ void printPlayerPosition(int player)
 	printf("|\n");
 }
 
-void printPlayerStatus(void)
+void printPlayerStatus(void) //플레이어 상태 출력 함수 
 {
 	int i;
 	printf("player status ---\n");
@@ -71,39 +71,39 @@ void printPlayerStatus(void)
 	printf("----------------------\n");
 }
 
-void checkDie(void)
+void checkDie(void) //플레이어 사망 여부 
 {
 	int i;
-	for(i = 0;i< N_BOARD; i++)
+	for(i = 0;i< N_BOARD; i++) // 플레이어 별로 for문 반복 
 	{	
-		if (board_getBoardStatus(player_position[i]) == BOARDSTATUS_NOK)
+		if (board_getBoardStatus(player_position[i]) == BOARDSTATUS_NOK) // player_status가 파손되었을 때 
 		{
-			player_status[i] = PLAYERSTATUS_DIE;
-			printf("%s has died!", player_name[i]);
+			player_status[i] = PLAYERSTATUS_DIE; //player_status[i]를 PLAYERSTATUS_DIE로 변경 
+			printf("%s has died!", player_name[i]); //사망 상태를 출력 
 		}
 	}
 }
 
-int game_end(void)
+int game_end(void) //게임 종료 함수 
 {
-	int i;
+	int i; 
 	int flag_end = 1;
 	
 	//if all the players are died?
 	for (i=0;i<N_PLAYER;i++)
 	{
 		
-		if (player_status[i] == PLAYERSTATUS_LIVE)
+		if (player_status[i] == PLAYERSTATUS_LIVE) //모든 플레이어가 PLAYERSTATUS_LIVE상태가 아니면 종료 
 		{
 			flag_end = 0;
 			break;
 		}
 		
 	}
-	return flag_end;
+	return flag_end; 
 }
 
-int getAlivePLayer(void)
+int getAlivePLayer(void) //생존 플레이어 수 계산 및 반환 함수 
 {
 	int i;
 	int cnt = 0;
@@ -116,7 +116,7 @@ int getAlivePLayer(void)
 
 }
 
-int getWinner(void)
+int getWinner(void) //생존 플레이어 중 동전이 가장 많은 플레이어 번호 반환 
 {
 	int i;
 	int winner = 0;
@@ -181,34 +181,34 @@ int main(int argc, char *argv[])
 		printPlayerStatus();
 		
 		//2-2. 주사위 던지기	
-		printf("%s turn!! ", player_name[turn]);
-		printf("Press any key to roll a die! : \n");
+		printf("%s turn!! ", player_name[turn]); //플레이어 턴 출력 
+		printf("Press any key to roll a die! : \n"); 
 		scanf("%d", &c);
 		fflush(stdin); //버퍼에 쌓였다가 프로그램으로 들어옴 -> 버퍼에 쌓여있을 수 있음 -> 여기 올때마다 입력을 받고 넘어감 
-		step = rolldie();
+		step = rolldie(); // 주사위 굴리기 함수 호출 
 		
 		
 		
  		//2-3. 이동	
-		player_position[turn] += step;
-		if (player_position[turn] >= N_BOARD) // 예외사항 처리 -  
+		player_position[turn] += step; //player_position[turn]값에 주사위 결과를 더함 
+		if (player_position[turn] >= N_BOARD) // 예외사항 처리 -  N_BOARD 이상 갔을 때 
 		{
 			player_position[turn] = N_BOARD-1;
 		}
 			
-		if (player_position[turn]==N_BOARD-1)
+		if (player_position[turn]==N_BOARD-1) //보드 맨 끝까지 이동한 경우에 대한 처리 
 		{
-			player_status[turn] = PLAYERSTATUS_END;
+			player_status[turn] = PLAYERSTATUS_END; 
 			printf("%s reached to the end!! (coin : %d)\n", player_name[turn], player_coin[turn]); 
 		}
-		printf("Die result : %d, %s moved to %d!\n", step, player_name[turn], player_position[turn]);
+		printf("Die result : %d, %s moved to %d!\n", step, player_name[turn], player_position[turn]); // 이동 결과 출력 
 		
 		
 		//2-4. 동전 줍기
-		coinResult = board_getBoardCoin(player_position[turn]);
-		if (coinResult > 0)
+		coinResult = board_getBoardCoin(player_position[turn]); //이동한 위치에서 board_getBoardCoin 함수 호출 
+		if (coinResult > 0) //동전이 존재하는 경우 동전 습득 정보를 츨력 
        {        
-          player_coin[turn] += coinResult;
+          player_coin[turn] += coinResult; // 반환된 동전 값을 player_coin[turn]에 더함 
           printf("-> Lucky! %s got %i coins \n", player_name[turn], coinResult); 
        }
        else
@@ -221,13 +221,12 @@ int main(int argc, char *argv[])
 		if (turn == 0) 
 		{	
 			//상어 동작
-			int shark_pos = board_stepShark();
-			printf("shark moved to %i\n"); 
-			checkDie();
+			int shark_pos = board_stepShark(); //상어 이동 진행 
+			printf("shark moved to %i\n");  
+			checkDie(); //상어 이동 후 플레이어의 생존 여부 확인 
 		} 
 		
-	} while (game_end() != 1); // 한명의 플레이어가 이 while문 한번에 도는 것 
-
+	} while (game_end() != 1); // 한명의 플레이어가 이 while문 한번에 도는 것  
 	//3. 정리 (승자 계산, 출력 등)
 		
 	int alive_players = getAlivePLayer();
