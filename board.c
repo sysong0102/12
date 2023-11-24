@@ -55,6 +55,7 @@ int board_printBoardStatus(void)
 	for (i=0;i<N_BOARD;i++)
 	{
 		printf("|");
+		printf("%d", board_coin[i]);
 		if (board_status[i] == BOARDSTATUS_NOK)
 			printf("X");
 		else
@@ -77,16 +78,18 @@ int board_getBoardStatus(int pos) // 내부 static 전역변수의 값을 main.c에 제공
 int board_getBoardCoin(int pos) //
 {
 	int coin = 	board_coin[pos]; // pos번째 보드칸에 있는 동전을 줍는 동작 
+	board_coin[pos] = 0;
 	return coin;
+	
 }
 
 //int board_getSharkPosition(void);
 
 int board_stepShark(void)
 {
-	int step = rand()%MAX_SHARKSTEP + 1; // 1 ~ MAX_SHARKSTEP 칸을 랜덤으로 이동
+	int step = rand()%(MAX_SHARKSTEP + 1); // 1 ~ MAX_SHARKSTEP 칸을 랜덤으로 이동
 	int i;
-	for(i=board_sharkPosition;i<board_sharkPosition+step;i++)
+	for(i=board_sharkPosition;i<=board_sharkPosition+step;i++)
 	{
 		if(i >= 0 && i < N_BOARD)
 			board_status[i] = BOARDSTATUS_NOK;
